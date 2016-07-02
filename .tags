@@ -1,0 +1,69 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+EEPROM_writeAnything	Firmware/DCCharger_V14_16/EEPROM_VMcharger.h	/^template <class T> int EEPROM_writeAnything(int ee, const T& value)$/;"	f
+EEPROM_readAnything	Firmware/DCCharger_V14_16/EEPROM_VMcharger.h	/^template <class T> int EEPROM_readAnything(int ee, T& value)$/;"	f
+read	Library/EEPROM/EEPROM.cpp	/^uint8_t EEPROMClass::read(int address)$/;"	f	class:EEPROMClass
+write	Library/EEPROM/EEPROM.cpp	/^void EEPROMClass::write(int address, uint8_t value)$/;"	f	class:EEPROMClass
+EEPROM	Library/EEPROM/EEPROM.cpp	/^EEPROMClass EEPROM;$/;"	v
+EEPROM_h	Library/EEPROM/EEPROM.h	21;"	d
+EEPROMClass	Library/EEPROM/EEPROM.h	/^class EEPROMClass$/;"	c
+uLCD_144	Library/uLCD_144/uLCD_144.cpp	/^uLCD_144::uLCD_144(int baud) {$/;"	f	class:uLCD_144
+getMSB	Library/uLCD_144/uLCD_144.cpp	/^byte uLCD_144::getMSB(byte red, byte green, byte blue) {$/;"	f	class:uLCD_144
+getLSB	Library/uLCD_144/uLCD_144.cpp	/^byte uLCD_144::getLSB(byte red, byte green, byte blue) {$/;"	f	class:uLCD_144
+waitAck	Library/uLCD_144/uLCD_144.cpp	/^int uLCD_144::waitAck() {$/;"	f	class:uLCD_144
+isAlive	Library/uLCD_144/uLCD_144.cpp	/^int uLCD_144::isAlive() {$/;"	f	class:uLCD_144
+setContrast	Library/uLCD_144/uLCD_144.cpp	/^void uLCD_144::setContrast(int contrast) {$/;"	f	class:uLCD_144
+clrScreen	Library/uLCD_144/uLCD_144.cpp	/^void uLCD_144::clrScreen() {$/;"	f	class:uLCD_144
+setBgColor	Library/uLCD_144/uLCD_144.cpp	/^void uLCD_144::setBgColor(byte red, byte green, byte blue) {$/;"	f	class:uLCD_144
+setPenSize	Library/uLCD_144/uLCD_144.cpp	/^void uLCD_144::setPenSize(int size) {$/;"	f	class:uLCD_144
+setFont	Library/uLCD_144/uLCD_144.cpp	/^void uLCD_144::setFont(int font) {$/;"	f	class:uLCD_144
+setOpacity	Library/uLCD_144/uLCD_144.cpp	/^void uLCD_144::setOpacity(int opacity) {$/;"	f	class:uLCD_144
+drawPixel	Library/uLCD_144/uLCD_144.cpp	/^void uLCD_144::drawPixel(int x, int y, byte red, byte green, byte blue) {$/;"	f	class:uLCD_144
+drawCircle	Library/uLCD_144/uLCD_144.cpp	/^void uLCD_144::drawCircle(int x, int y, int r, byte red, byte green, byte blue) {$/;"	f	class:uLCD_144
+printStr	Library/uLCD_144/uLCD_144.cpp	/^void uLCD_144::printStr(int col, int row, int font, byte red, byte green, byte blue, const char *str) {$/;"	f	class:uLCD_144
+printStr	Library/uLCD_144/uLCD_144.cpp	/^void uLCD_144::printStr(int col, int row, int font, byte red, byte green, byte blue, const __FlashStringHelper *str) {$/;"	f	class:uLCD_144
+printGRStr	Library/uLCD_144/uLCD_144.cpp	/^void uLCD_144::printGRStr(int x, int y, int font, byte red, byte green, byte blue, int w, int h, const char *str) {$/;"	f	class:uLCD_144
+drawLine	Library/uLCD_144/uLCD_144.cpp	/^void uLCD_144::drawLine(int  x1, int y1, int x2, int y2, byte red, byte green, byte blue) {$/;"	f	class:uLCD_144
+drawRect	Library/uLCD_144/uLCD_144.cpp	/^void uLCD_144::drawRect(int x1, int y1, int x2, int y2, byte red, byte green, byte blue) {$/;"	f	class:uLCD_144
+uLCD_144_h	Library/uLCD_144/uLCD_144.h	13;"	d
+uLCD_144	Library/uLCD_144/uLCD_144.h	/^class uLCD_144$/;"	c
+isAlive_	Library/uLCD_144/uLCD_144.h	/^	int isAlive_;$/;"	m	class:uLCD_144
+Timer1	Library/Timer1/TimerOne.cpp	/^TimerOne Timer1;              \/\/ preinstatiate$/;"	v
+ISR	Library/Timer1/TimerOne.cpp	/^ISR(TIMER1_OVF_vect)          \/\/ interrupt service routine that wraps a user defined function supplied by attachInterrupt$/;"	f
+initialize	Library/Timer1/TimerOne.cpp	/^void TimerOne::initialize(long microseconds)$/;"	f	class:TimerOne
+setPeriod	Library/Timer1/TimerOne.cpp	/^void TimerOne::setPeriod(long microseconds)$/;"	f	class:TimerOne
+setPwmDuty	Library/Timer1/TimerOne.cpp	/^void TimerOne::setPwmDuty(char pin, int duty)$/;"	f	class:TimerOne
+pwm	Library/Timer1/TimerOne.cpp	/^void TimerOne::pwm(char pin, int duty, long microseconds)  \/\/ expects duty cycle to be 10 bit (1024)$/;"	f	class:TimerOne
+disablePwm	Library/Timer1/TimerOne.cpp	/^void TimerOne::disablePwm(char pin)$/;"	f	class:TimerOne
+attachInterrupt	Library/Timer1/TimerOne.cpp	/^void TimerOne::attachInterrupt(void (*isr)(), long microseconds)$/;"	f	class:TimerOne
+detachInterrupt	Library/Timer1/TimerOne.cpp	/^void TimerOne::detachInterrupt()$/;"	f	class:TimerOne
+start	Library/Timer1/TimerOne.cpp	/^void TimerOne::start()$/;"	f	class:TimerOne
+stop	Library/Timer1/TimerOne.cpp	/^void TimerOne::stop()$/;"	f	class:TimerOne
+restart	Library/Timer1/TimerOne.cpp	/^void TimerOne::restart()$/;"	f	class:TimerOne
+RESOLUTION	Library/Timer1/TimerOne.h	17;"	d
+TimerOne	Library/Timer1/TimerOne.h	/^class TimerOne$/;"	c
+pwmPeriod	Library/Timer1/TimerOne.h	/^    unsigned int pwmPeriod;$/;"	m	class:TimerOne
+clockSelectBits	Library/Timer1/TimerOne.h	/^    unsigned char clockSelectBits;$/;"	m	class:TimerOne
+isrCallback	Library/Timer1/TimerOne.h	/^    void (*isrCallback)();$/;"	m	class:TimerOne
+uLCD_144_SPE_h	Library/uLCD_144_SPE/uLCD_144_SPE.h	13;"	d
+uLCD_144_SPE	Library/uLCD_144_SPE/uLCD_144_SPE.h	/^class uLCD_144_SPE$/;"	c
+isAlive_	Library/uLCD_144_SPE/uLCD_144_SPE.h	/^	int isAlive_;$/;"	m	class:uLCD_144_SPE
+uLCD_144_SPE	Library/uLCD_144_SPE/uLCD_144_SPE.cpp	/^uLCD_144_SPE::uLCD_144_SPE(int baud) {$/;"	f	class:uLCD_144_SPE
+getMSB	Library/uLCD_144_SPE/uLCD_144_SPE.cpp	/^byte uLCD_144_SPE::getMSB(byte red, byte green, byte blue) {$/;"	f	class:uLCD_144_SPE
+getLSB	Library/uLCD_144_SPE/uLCD_144_SPE.cpp	/^byte uLCD_144_SPE::getLSB(byte red, byte green, byte blue) {$/;"	f	class:uLCD_144_SPE
+waitAck	Library/uLCD_144_SPE/uLCD_144_SPE.cpp	/^int uLCD_144_SPE::waitAck() {$/;"	f	class:uLCD_144_SPE
+isAlive	Library/uLCD_144_SPE/uLCD_144_SPE.cpp	/^int uLCD_144_SPE::isAlive() {$/;"	f	class:uLCD_144_SPE
+clrScreen	Library/uLCD_144_SPE/uLCD_144_SPE.cpp	/^void uLCD_144_SPE::clrScreen() {$/;"	f	class:uLCD_144_SPE
+setMode	Library/uLCD_144_SPE/uLCD_144_SPE.cpp	/^void uLCD_144_SPE::setMode(int mode) {$/;"	f	class:uLCD_144_SPE
+setYspacing	Library/uLCD_144_SPE/uLCD_144_SPE.cpp	/^void uLCD_144_SPE::setYspacing(int pixels) {$/;"	f	class:uLCD_144_SPE
+setOpacity	Library/uLCD_144_SPE/uLCD_144_SPE.cpp	/^void uLCD_144_SPE::setOpacity(int opacity) {$/;"	f	class:uLCD_144_SPE
+moveCursor	Library/uLCD_144_SPE/uLCD_144_SPE.cpp	/^void uLCD_144_SPE::moveCursor(int col, int row) {$/;"	f	class:uLCD_144_SPE
+setFGcolor	Library/uLCD_144_SPE/uLCD_144_SPE.cpp	/^void uLCD_144_SPE::setFGcolor(byte red, byte green, byte blue) {$/;"	f	class:uLCD_144_SPE
+setFont	Library/uLCD_144_SPE/uLCD_144_SPE.cpp	/^void uLCD_144_SPE::setFont(int font) {$/;"	f	class:uLCD_144_SPE
+printStr	Library/uLCD_144_SPE/uLCD_144_SPE.cpp	/^void uLCD_144_SPE::printStr(int col, int row, int font, byte red, byte green, byte blue, const char *str) {$/;"	f	class:uLCD_144_SPE
+printStr	Library/uLCD_144_SPE/uLCD_144_SPE.cpp	/^void uLCD_144_SPE::printStr(int col, int row, int font, byte red, byte green, byte blue, const __FlashStringHelper *str) {$/;"	f	class:uLCD_144_SPE
+wrapStr	Library/uLCD_144_SPE/uLCD_144_SPE.cpp	/^void uLCD_144_SPE::wrapStr(const char *s, char *sto, int lineSize, const char *prefix) {$/;"	f	class:uLCD_144_SPE
