@@ -35,11 +35,11 @@ Original version created Jan 2011 by Valery Miftakhov, Electric Motor Werks, LLC
 #define SC_LV // if using low-voltage output below 300V (e.g., Zero chargers) and high current output
 const float MAX_SC_POWER=12000.; // normally 12000
 
-#define MAX_OUT_CURRENT 95 // 70A by default, limit to 50A for old IGBTs
+#define MAX_OUT_CURRENT 120 // 70A by default, limit to 50A for old IGBTs
 
 // derating starts here (C). should be 55 for older chargers with <200A IGBTs, 65 for 300A+
 //        70-75C for slow-cooling conditions
-const float deratingT=65;
+const float deratingT=70;
 
 // current-dependent offset for the output voltage measurement
 float bV_C_offset;
@@ -699,8 +699,9 @@ void setup() {
   if(init_mainsV < minMains)  //if input voltage is too low (or input not plugged in)
   {
 
-    sprintf(str, "INPUT: %dV", int(init_mainsV));
-    printMsg(str, 0, 0, 0, 0x1F, 0x3F, 0x00);
+    sprintf(str, "INPUT: %dV, %d", int(init_mainsV),int(mV_ADC*100));
+    printMsg(str);
+    printParams(outV, outC, normT, AH_charger, maxOutC1, maxOutV);
 
     while(1)        //loop until input voltage > threshold
     {
@@ -764,7 +765,7 @@ void loop() {
           // serial control of the charger is enabled
           configuration.mainsC=160; // limit input current to something high but not crazy - 120A = 40% of a 400A IGBT rating
           //sprintf(str, "R:M%03d,V%03d,c%03d,v%03d", int(mainsV), int(outV), int(configuration.CC), int(maxOutV));
-          sprintf(str, "R:M%03d,V%03d,c%03d,v%03d,T%03d", int(Aref/1024.*mV_ADC*100), int(outV), int(configuration.CC), int(maxOutV),int(getNormT()));
+          sprintf(str, "R:M%03d,V%03d,c%03d,v%03d,T%03d", int(mV_ADC*100), int(outV), int(configuration.CC), int(maxOutV),int(getNormT()));
 
           EMWserialMsg(str); // send 'ready' status - expect controller to respond within 200ms
 
@@ -829,7 +830,7 @@ void loop() {
             // (which it should be at this point)
             // 10A is a lot of margin for that
             if(fabs(readC())>10) {
-              printMsg("C>10A, CHECK SENSOR", 0, 0, 3, 0x1f, 0, 0x0);
+              printMsg("C>10A, CHECK SENSOR");
               return;
             }
 
@@ -838,7 +839,7 @@ void loop() {
             if(timerBMS==0 || (millis() - timerBMS > 60000*10) ) {
               runChargeStep();
             } else {
-              printMsg("BMS lockout", 0, 0, 3, 0x1f, 0, 0x0);
+              printMsg("BMS lockout");
             }
             PWM_enable_=0; // HAS to be here to ensure complete stop on any condition
 
@@ -1155,16 +1156,6 @@ void readJ1772() {
   // in the main charging cycle
   maxMainsC=configuration.mainsC;
   mainsV=read_mV(); // for power adjustments
-
-#ifdef drop110power
-  if(J1772_dur<50) { // but only if no J signal
-    // curb power on 110VAC
-    if(mainsV<160) {
-      maxMainsC=min(configuration.mainsC/2, 9.); // equivalent 15A from 110VAC // DEBUG
-    }
-  }
-#endif
-
 }
 
 
@@ -1189,7 +1180,7 @@ float getAllowedC(float userMaxC, byte flag) {
       PWM_enable_=0;
       while(1) {
         sprintf(str, "Cool from %dC", (int)normT);
-        printMsg(str, 1000, 0, 1, 0x1F, 0, 0);
+        printMsg(str);
         normT=getNormT();
         if(normT<midHeatSinkT) {
           PWM_enable_=1; // restart PWM
@@ -1244,19 +1235,20 @@ float readV() {
 
 // input voltage
 float read_mV() {
-#ifdef PC817
-  if(outC>1.0) {
-    return init_mainsV; // return start-up value if there is any current draw
-  } else {
-    // if zero current, then do measurement
-    // 3V is a threashold between 120V and 240V - but may require adjustment on a per-unit basis
-    if(Aref/1024.*mV_ADC < 4.1) return 240;
-    return 120;
-  }
-#endif
-
-if(DCDC_OUT_HIGH*POWER_DIRECTION==1) return (Aref/1024.*bV_ADC-V_o_mV)*divider_k_mV/1.414;
-  else return (Aref/1024.*mV_ADC-V_o_mV)*divider_k_mV/1.414;
+    if(outC>1.0) {
+        if(init_mainsV<50){
+            //sometimes does not work so always default to 208
+            return 208;
+        }
+        return init_mainsV; // return start-up value if there is any current draw
+    } else {
+    //  // if zero current, then do measurement
+    //  // 3V is a threashold between 120V and 208V - but may require adjustment on a per-unit basis
+      if(Aref/1024.*mV_ADC < 4.1){
+        return 208;
+      }
+      return 120;
+    }
 }
 //============================ end voltage readout functions =====================
 
@@ -1276,7 +1268,7 @@ byte read_T(unsigned int ADC_val) {
 
 
 //=========================================== Communication (LCD / Serial) Functions =========================
-void printMsg(char *str_, const int del, const byte col, const byte row, const byte red, const byte green, const byte blue) {
+void printMsg(char *str_) {
   EMWserialMsg(str_);
 }
 
@@ -1288,7 +1280,7 @@ void printParams(float outV, float outC, int t, float curAH, float maxC, float m
     //orig
     //sprintf(str, "S:D%03d,C%03d,V%03d,T%03d,O%03d,S%03d", int(milliduty/10000), int(outC*10), int(outV), t, int(curAH*10), getCheckSum(int(outC*10), int(outV)));
 
-    sprintf(str, "S:D%03d,C%03d,V%03d,T%03d,O%03d,M:%03d,S%03d", int(milliduty/10000), int(outC*10), int(outV), t, int(curAH*10), int(Aref/1024.*mV_ADC*100),
+    sprintf(str, "S:D%03d,C%03d,V%03d,T%03d,O%03d,M:%03d,S%03d", int(milliduty/10000), int(outC*10), int(outV), t, int(curAH*10), int(mV_ADC*100),
 
     getCheckSum(int(outC*10), int(outV)));
 
