@@ -35,7 +35,7 @@ Original version created Jan 2011 by Valery Miftakhov, Electric Motor Werks, LLC
 #define SC_LV // if using low-voltage output below 300V (e.g., Zero chargers) and high current output
 const float MAX_SC_POWER=12000.; // normally 12000
 
-#define MAX_OUT_CURRENT 120 // 70A by default, limit to 50A for old IGBTs
+#define MAX_OUT_CURRENT 95 // 70A by default, limit to 50A for old IGBTs
 
 // derating starts here (C). should be 55 for older chargers with <200A IGBTs, 65 for 300A+
 //        70-75C for slow-cooling conditions
