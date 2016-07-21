@@ -1,3 +1,5 @@
+#define DIGINOW_VERSION  1
+
 /*
 This is the firmware for EMotorWerks Intelligent DC Charging Systems - covering the following products:
 * SmartCharge-12000 - a 12kW+ charging system
@@ -765,7 +767,7 @@ void loop() {
           // serial control of the charger is enabled
           configuration.mainsC=160; // limit input current to something high but not crazy - 120A = 40% of a 400A IGBT rating
           //sprintf(str, "R:M%03d,V%03d,c%03d,v%03d", int(mainsV), int(outV), int(configuration.CC), int(maxOutV));
-          sprintf(str, "R:M%03d,V%03d,c%03d,v%03d,T%03d", int(mV_ADC*100), int(outV), int(configuration.CC), int(maxOutV),int(getNormT()));
+          sprintf(str, "R:M%03d,V%03d,c%03d,v%03d,T%03d", int(mainsV), int(outV), int(configuration.CC), int(maxOutV),int(getNormT()));
 
           EMWserialMsg(str); // send 'ready' status - expect controller to respond within 200ms
 
@@ -1244,10 +1246,11 @@ float read_mV() {
     } else {
     //  // if zero current, then do measurement
     //  // 3V is a threashold between 120V and 208V - but may require adjustment on a per-unit basis
-      if(Aref/1024.*mV_ADC < 4.1){
+      /*if(Aref/1024.*mV_ADC < 4.1){
         return 208;
       }
-      return 120;
+      return 120;*/
+      return 208;
     }
 }
 //============================ end voltage readout functions =====================
@@ -1279,9 +1282,10 @@ void printParams(float outV, float outC, int t, float curAH, float maxC, float m
 
     //orig
     //sprintf(str, "S:D%03d,C%03d,V%03d,T%03d,O%03d,S%03d", int(milliduty/10000), int(outC*10), int(outV), t, int(curAH*10), getCheckSum(int(outC*10), int(outV)));
-
-    sprintf(str, "S:D%03d,C%03d,V%03d,T%03d,O%03d,M:%03d,S%03d", int(milliduty/10000), int(outC*10), int(outV), t, int(curAH*10), int(mV_ADC*100),
-
+    
+    int mainsV = read_mV();
+    sprintf(str, "S:D%03d,C%03d,V%03d,T%03d,O%03d,M:%03d,N:%03d,S%03d", int(milliduty/10000), int(outC*10), int(outV), t, int(curAH*10), int(mainsV), DIGINOW_VERSION, 
+    
     getCheckSum(int(outC*10), int(outV)));
 
     EMWserialMsg(str);
