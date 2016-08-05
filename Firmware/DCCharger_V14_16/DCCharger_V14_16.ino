@@ -1,4 +1,4 @@
-#define DIGINOW_VERSION  1
+#define DIGINOW_VERSION  2
 
 /*
 This is the firmware for EMotorWerks Intelligent DC Charging Systems - covering the following products:
