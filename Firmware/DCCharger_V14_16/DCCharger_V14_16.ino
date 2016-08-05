@@ -41,7 +41,7 @@ const float MAX_SC_POWER=12000.; // normally 12000
 
 // derating starts here (C). should be 55 for older chargers with <200A IGBTs, 65 for 300A+
 //        70-75C for slow-cooling conditions
-const float deratingT=70;
+const float deratingT=65;
 
 // current-dependent offset for the output voltage measurement
 float bV_C_offset;
@@ -331,6 +331,7 @@ byte normT=0;
 const byte minMains=30; // min mains voltage to (1) test sensor connectivity and (2) detect mains disconnect
 int timeOut=0; // in min, 0 means no timeout
 float maxOutV=0; // absolute maximum output voltage - will be set later in the code
+float minOutV=70; // absolute minimum output voltage
 float maxMainsC=0; // allowed charger power - will be changed in code
 
 unsigned long J1772_dur;
@@ -643,6 +644,11 @@ void setup() {
   EEPROM_readAnything(0, configuration);
   // reset configuration if the green button is pressed at charger start
   // on first connection, do zero cal of mainsV, as well
+  
+  configuration.CV=415;
+  configuration.nCells=28;
+
+  
   if(configuration.marker!=testMarker) {
       forceConfig=1; // first time running the charger after assembly
       init_forceConfig=1; // copy
@@ -720,7 +726,7 @@ void setup() {
   // generally for boost topology, the higher the voltage, the better we are
   // reverse for buck topology
   absMaxChargerPower_adjustment=1.;
-
+  
   // if too fast slow it down
   // this is ~5 seconds after power-up, by this time, the input caps should be charged (using a )
   // input precharge CANNOT be done with regular resistors due to constant power consumption by the PFC stage (switching losses)
@@ -743,7 +749,7 @@ void loop() {
   //         (3) green button is pressed to override
   if(charger_run==0) {
     // check J1772 - has to be here in order to work for both serial and manual control
-    readJ1772();
+    //readJ1772();
 
       // run state machine:
       //
@@ -751,14 +757,27 @@ void loop() {
       // drop us directly into a serial control loop
       state=STATE_SERIALCONTROL;
 
-      if(configuration.CC<=0) state=STATE_CONFIG_PWR;
-
       while(state != STATE_SHUTDOWN)
       {
         // reload voltages
         mainsV=read_mV();
         outV=readV();
+        
+        if(outV>maxOutV||outV<minOutV){
+            PWM_enable_=0; // HAS to be here to ensure complete stop on any condition
 
+            // make sure everything is off
+            digitalWrite(pin_outrelay, LOW);
+            digitalWrite(pin_fan, LOW);
+            digitalWrite(pin_EOC, LOW); // active low
+            
+            sprintf(str, "%dAH", int(AH_charger));
+
+            EMWserialMsg(str);
+            state = STATE_SERIALCONTROL; // ready for next run
+            return;
+        }
+        
         //======================== MAIN STATE MACHINE ======================
         switch(state)
         {
@@ -793,7 +812,7 @@ void loop() {
             state=STATE_CHARGE;
           } else {
             delay(200); // wait a bit and do another check for a command - cannot wait too long due to QC timing.
-            readJ1772();
+            //readJ1772();
           }
           break;
 
