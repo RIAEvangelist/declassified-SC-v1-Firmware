@@ -740,8 +740,9 @@ void loop() {
 
   mainsV=read_mV();
   outV=readV();
-
-  maxOutV=118.;
+  
+  //needs to allow for calibration room
+  maxOutV=125.;
 
   // run charger if:
   //         (1) charger has NOT been run yet in this cycle, or
@@ -786,7 +787,12 @@ void loop() {
           // serial control of the charger is enabled
           configuration.mainsC=160; // limit input current to something high but not crazy - 120A = 40% of a 400A IGBT rating
           //sprintf(str, "R:M%03d,V%03d,c%03d,v%03d", int(mainsV), int(outV), int(configuration.CC), int(maxOutV));
-          sprintf(str, "R:M%03d,V%03d,c%03d,v%03d,T%03d", int(mainsV), int(outV), int(configuration.CC), int(maxOutV),int(getNormT()));
+          sprintf(
+            str, 
+            "R:M%03d,V%03d,c%03d,v%03d,T%03d,N:%03d", 
+            int(mainsV), int(outV), int(configuration.CC), int(maxOutV),
+            int(getNormT()),DIGINOW_VERSION
+          );
 
           EMWserialMsg(str); // send 'ready' status - expect controller to respond within 200ms
 
@@ -1303,9 +1309,12 @@ void printParams(float outV, float outC, int t, float curAH, float maxC, float m
     //sprintf(str, "S:D%03d,C%03d,V%03d,T%03d,O%03d,S%03d", int(milliduty/10000), int(outC*10), int(outV), t, int(curAH*10), getCheckSum(int(outC*10), int(outV)));
     
     int mainsV = read_mV();
-    sprintf(str, "S:D%03d,C%03d,V%03d,T%03d,O%03d,M:%03d,N:%03d,S%03d", int(milliduty/10000), int(outC*10), int(outV), t, int(curAH*10), int(mainsV), DIGINOW_VERSION, 
-    
-    getCheckSum(int(outC*10), int(outV)));
+    sprintf(
+      str, 
+      "S:D%03d,C%03d,V%03d,T%03d,O%03d,M:%03d,N:%03d,S%03d", 
+      int(milliduty/10000), int(outC*10), int(outV), t, int(curAH*10), 
+      int(mainsV), DIGINOW_VERSION, getCheckSum(int(outC*10), int(outV))
+    );
 
     EMWserialMsg(str);
 }
